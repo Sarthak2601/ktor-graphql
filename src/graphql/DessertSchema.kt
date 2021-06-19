@@ -3,12 +3,9 @@ package com.sarthak.graphql
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.sarthak.models.Dessert
 import com.sarthak.models.DessertInput
-import com.sarthak.repository.DessertRepository
-import java.util.*
+import com.sarthak.services.DessertService
 
-fun SchemaBuilder.dessertSchema(){
-    val repository = DessertRepository()
-
+fun SchemaBuilder.dessertSchema(dessertService: DessertService){
     inputType<DessertInput>{
         description = "The input of the dessert without identifier"
     }
@@ -20,14 +17,14 @@ fun SchemaBuilder.dessertSchema(){
     query("dessert") {
         resolver { dessertId: String ->
             try {
-                repository.getById(dessertId)
+                dessertService.getDessert(dessertId)
             }catch (e: Exception){
                 null
             }
         }
     }
 
-    query("desserts") {
+/*    query("desserts") {
         resolver { ->
             try {
                 repository.getAll()
@@ -35,17 +32,16 @@ fun SchemaBuilder.dessertSchema(){
                 emptyList<Dessert>()
             }
         }
-    }
+    }*/
 
     mutation("createDessert"){
         description = "Create a new dessert"
         resolver { dessertInput: DessertInput ->
             try {
-                val uid = UUID.randomUUID().toString()
-                val dessert = Dessert(uid, dessertInput.name, dessertInput.description, dessertInput.imageUrl)
-                repository.add(dessert)
+                val userId = "abc"
+                dessertService.createDessert(dessertInput, userId)
             }catch (e: Exception){
-                null
+                throw e
             }
         }
     }
@@ -54,7 +50,8 @@ fun SchemaBuilder.dessertSchema(){
         description = "Delete a dessert"
         resolver { dessertId: String ->
             try {
-                repository.delete(dessertId)
+                val userId = "abc"
+                dessertService.deleteDessert(userId, dessertId)
             }catch (e: Exception){
                 null
             }
@@ -65,8 +62,8 @@ fun SchemaBuilder.dessertSchema(){
         description = "Update the existing desserts"
         resolver { dessertId: String, dessertInput: DessertInput ->
             try {
-                val dessert = Dessert(dessertId, dessertInput.name, dessertInput.description, dessertInput.imageUrl)
-                repository.update(dessert)
+                val userId = "abc"
+                dessertService.updateDessert(dessertId, userId, dessertInput)
             }catch (e: Exception){
                 null
             }

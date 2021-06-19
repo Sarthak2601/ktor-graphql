@@ -1,20 +1,27 @@
 package com.sarthak
 
 import com.apurebase.kgraphql.GraphQL
+import com.sarthak.di.mainModule
 import com.sarthak.graphql.dessertSchema
+import com.sarthak.services.DessertService
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
+import org.koin.core.context.startKoin
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
-    install(GraphQL){
+
+    startKoin { modules(mainModule) }
+
+    install(GraphQL) {
+        val desertService = DessertService()
         playground = true
         schema {
-            dessertSchema()
+            dessertSchema(desertService)
         }
     }
 }
