@@ -5,6 +5,7 @@ import com.sarthak.models.Dessert
 import com.sarthak.models.DessertInput
 import com.sarthak.models.DessertsPage
 import com.sarthak.repository.DessertRepository
+import com.sarthak.repository.ReviewRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.util.*
@@ -12,9 +13,12 @@ import java.util.*
 class DessertService: KoinComponent {
     private val client: MongoClient by inject()
     private val repository = DessertRepository(client)
+    private val reviewRepository = ReviewRepository(client)
 
     fun getDessert(id: String): Dessert{
-        return repository.getById(id)
+        return repository.getById(id).apply {
+            this.reviews = reviewRepository.getReviewsByDessertId(id)
+        }
     }
 
     fun createDessert(dessertInput: DessertInput, userId: String): Dessert {
