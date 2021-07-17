@@ -13,3 +13,15 @@ data class DessertInput(
     val description: String,
     val imageUrl: String
 )
+
+data class PagingInfo(
+    var count: Int,
+    var pages: Int,
+    var next: Int?,
+    var prev: Int?
+)
+
+data class DessertsPage(
+    val results: List<Dessert>,
+    val info: PagingInfo
+)

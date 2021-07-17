@@ -3,6 +3,7 @@ package com.sarthak.services
 import com.mongodb.client.MongoClient
 import com.sarthak.models.Dessert
 import com.sarthak.models.DessertInput
+import com.sarthak.models.DessertsPage
 import com.sarthak.repository.DessertRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -37,5 +38,9 @@ class DessertService: KoinComponent {
             return repository.delete(dessertId)
         }
         error("Can't delete dessert")
+    }
+
+    fun getDessertsPage(page: Int, size: Int): DessertsPage{
+        return repository.getDessertsPage(page, size)
     }
 }

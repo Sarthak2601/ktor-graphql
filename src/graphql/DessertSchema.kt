@@ -24,15 +24,15 @@ fun SchemaBuilder.dessertSchema(dessertService: DessertService){
         }
     }
 
-/*    query("desserts") {
-        resolver { ->
+    query("desserts"){
+        resolver{ page: Int?, size: Int? ->
             try {
-                repository.getAll()
+                dessertService.getDessertsPage(page?: 0, size?: 10 )
             }catch (e: Exception){
-                emptyList<Dessert>()
+                null
             }
         }
-    }*/
+    }
 
     mutation("createDessert"){
         description = "Create a new dessert"
