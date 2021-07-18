@@ -12,6 +12,7 @@ val bcrypt_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.4.32"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 tasks {
     compileKotlin {
@@ -19,6 +20,20 @@ tasks {
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
+application{
+    mainClassName = "io.ktor.server.netty.EngineMain"
+}
+
+tasks.withType<Jar>{
+    manifest{
+        attributes(
+            mapOf(
+                "Main-Class" to application.mainClassName
+            )
+        )
     }
 }
 

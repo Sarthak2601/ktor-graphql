@@ -1,0 +1,5 @@
+{
+  "name": "Ktor GraphQL",
+  "description": "Ktor GraphQL Server",
+  "image": "heroku/java"
+}
