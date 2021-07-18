@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection
 import com.sarthak.models.Dessert
 import com.sarthak.models.DessertsPage
 import com.sarthak.models.PagingInfo
+import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 
 class DessertRepository(client: MongoClient): RepositoryInterface<Dessert> {
@@ -27,6 +28,14 @@ class DessertRepository(client: MongoClient): RepositoryInterface<Dessert> {
             return DessertsPage(results, info)
         }catch (t: Throwable){
             throw Exception("Can't get desserts page")
+        }
+    }
+
+    fun getDessertsByUserId(userId: String): List<Dessert>{
+        return try {
+            collection.find(Dessert::userId eq userId).asIterable().map { it }
+        }catch (t: Throwable){
+            throw Exception("Can't get user desseerts")
         }
     }
 }

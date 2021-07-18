@@ -1,8 +1,10 @@
 package com.sarthak.graphql
 
+import com.apurebase.kgraphql.Context
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.sarthak.models.Dessert
 import com.sarthak.models.DessertInput
+import com.sarthak.models.User
 import com.sarthak.services.DessertService
 
 fun SchemaBuilder.dessertSchema(dessertService: DessertService){
@@ -36,9 +38,9 @@ fun SchemaBuilder.dessertSchema(dessertService: DessertService){
 
     mutation("createDessert"){
         description = "Create a new dessert"
-        resolver { dessertInput: DessertInput ->
+        resolver { dessertInput: DessertInput, context: Context ->
             try {
-                val userId = "abc"
+                val userId = context.get<User>()?.id ?: error("User not signed in")
                 dessertService.createDessert(dessertInput, userId)
             }catch (e: Exception){
                 throw e
@@ -48,9 +50,9 @@ fun SchemaBuilder.dessertSchema(dessertService: DessertService){
 
     mutation("deleteDessert"){
         description = "Delete a dessert"
-        resolver { dessertId: String ->
+        resolver { dessertId: String, context: Context ->
             try {
-                val userId = "abc"
+                val userId = context.get<User>()?.id ?: error("User not signed in")
                 dessertService.deleteDessert(userId, dessertId)
             }catch (e: Exception){
                 null
@@ -60,9 +62,9 @@ fun SchemaBuilder.dessertSchema(dessertService: DessertService){
 
     mutation("updateDessert"){
         description = "Update the existing desserts"
-        resolver { dessertId: String, dessertInput: DessertInput ->
+        resolver { dessertId: String, dessertInput: DessertInput, context: Context ->
             try {
-                val userId = "abc"
+                val userId = context.get<User>()?.id ?: error("User not signed in")
                 dessertService.updateDessert(dessertId, userId, dessertInput)
             }catch (e: Exception){
                 null

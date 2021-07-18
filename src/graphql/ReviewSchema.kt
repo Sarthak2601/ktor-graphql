@@ -1,10 +1,8 @@
 package com.sarthak.graphql
 
+import com.apurebase.kgraphql.Context
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
-import com.sarthak.models.Dessert
-import com.sarthak.models.DessertInput
-import com.sarthak.models.Review
-import com.sarthak.models.ReviewInput
+import com.sarthak.models.*
 import com.sarthak.services.DessertService
 import com.sarthak.services.ReviewService
 
@@ -30,9 +28,9 @@ fun SchemaBuilder.reviewSchema(reviewService: ReviewService){
 
     mutation("createReview"){
         description = "Create a new review"
-        resolver { reviewInput: ReviewInput, dessertId: String ->
+        resolver { reviewInput: ReviewInput, dessertId: String, context: Context ->
             try {
-                val userId = "abc"
+                val userId = context.get<User>()?.id ?: error("User not signed in")
                 reviewService.createReview(reviewInput, userId, dessertId)
             }catch (e: Exception){
                 throw e
@@ -42,9 +40,9 @@ fun SchemaBuilder.reviewSchema(reviewService: ReviewService){
 
     mutation("deleteReview"){
         description = "Delete a review"
-        resolver { reviewId: String ->
+        resolver { reviewId: String, context: Context ->
             try {
-                val userId = "abc"
+                val userId = context.get<User>()?.id ?: error("User not signed in")
                 reviewService.deleteReview(userId, reviewId)
             }catch (e: Exception){
                 null
@@ -54,9 +52,9 @@ fun SchemaBuilder.reviewSchema(reviewService: ReviewService){
 
     mutation("updateReview"){
         description = "Update the existing reviews"
-        resolver { reviewId: String, reviewInput: ReviewInput ->
+        resolver { reviewId: String, reviewInput: ReviewInput, context: Context ->
             try {
-                val userId = "abc"
+                val userId = context.get<User>()?.id ?: error("User not signed in")
                 reviewService.updateReview(reviewId, userId, reviewInput)
             }catch (e: Exception){
                 null
