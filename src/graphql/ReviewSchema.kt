@@ -16,7 +16,6 @@ fun SchemaBuilder.reviewSchema(reviewService: ReviewService){
     }
 
     query("review") {
-        description = " Get an existing review"
         resolver { reviewId: String ->
             try {
                 reviewService.getReview(reviewId)
